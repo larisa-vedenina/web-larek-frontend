@@ -48,10 +48,6 @@ export type ApiListResponse<Type> = {
   // Полные данные для оформления заказа
   export type TFullOrderData = IPaymentData & IContactData;
   
-  // Интерфейс для модального окна (контент может быть одним элементом или массивом)
-  export interface IModalContent {
-    elements: HTMLElement | HTMLElement[];
-  }
   
   // Интерфейс для отображения данных корзины
   export interface IBasketDisplay {

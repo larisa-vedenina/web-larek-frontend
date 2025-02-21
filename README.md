@@ -80,7 +80,7 @@ export interface IProductCard {
   image: string;        // Ссылка на изображение товара
   title: string;        // Название товара
   category: string;     // Категория, к которой относится товар
-  price: number;        // Стоимость товара
+  price: number | null;     // Стоимость товара
 };
 ```
 
@@ -91,7 +91,7 @@ export interface IProductCard {
 Определяет работу с коллекцией карточек. 
 
 ```
-export interface IProductCatalog {
+export interface IProductCardsData {
   items: IProductCard[];                           // Массив карточек товаров
 };
 ```
@@ -104,7 +104,7 @@ export interface IProductCatalog {
 
 
 ```
-export interface IPaymentDetails {
+export interface IPaymentData {
   method: string;   // Метод оплаты
   address: string;  // Адрес доставки товара
 };
@@ -118,7 +118,7 @@ export interface IPaymentDetails {
 Содержит контактные данные пользователя, такие как email и телефон.
 
 ```
-export interface IContactInfo {
+export interface IContactData {
   email: string;  // Email пользователя
   phone: string;  // Телефон пользователя
 };
