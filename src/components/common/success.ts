@@ -1,24 +1,33 @@
 import {Component} from "../base/component";
 import {ensureElement} from "../../utils/utils";
+import { IEvents } from "../base/events";
+import { ICardActions } from "../../types";
 
 interface ISuccess {
-    total: number;
-}
+    totalSum: number; // Общая сумма заказа
+  }
+  
 
-interface ISuccessActions {
-    onClick: () => void;
-}
-
-export class Success extends Component<ISuccess> {
-    protected _close: HTMLElement;
-
-    constructor(container: HTMLElement, actions: ISuccessActions) {
-        super(container);
-
-        this._close = ensureElement<HTMLElement>('.state__action', this.container);
-
-        if (actions?.onClick) {
-            this._close.addEventListener('click', actions.onClick);
-        }
+// Класс для отображения итоговой суммы
+export class SuccessView extends Component<ISuccess> {
+    protected totalElement: HTMLElement; 
+    protected closeButton: HTMLButtonElement; 
+  
+    constructor(container: HTMLFormElement, events: IEvents, actions?: ICardActions) {
+      super(container);
+  
+      // Находим элементы в DOM
+      this.totalElement = ensureElement<HTMLElement>(".order-success__description", this.container);
+      this.closeButton = ensureElement<HTMLButtonElement>(".order-success__close", this.container);
+  
+      // Добавляем обработчик клика на кнопку закрытия
+      if (actions?.onClick) {
+        this.closeButton.addEventListener('click', actions.onClick);
+      }
     }
-}
+  
+    // Устанавливаем итоговую сумму
+    set totalSum(value: number) {
+      this.totalElement.innerText = `Списано ${value} синапсов`;
+    }
+  }

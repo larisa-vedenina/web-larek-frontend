@@ -1,16 +1,10 @@
 
-// Общий интерфейс ответа API
-export type ApiListResponse<Type> = {
-    total: number;
-    items: Type[];
-  };
-  
   // Описание карточки товара
   export interface IProductCard {
     id: string;
+    title: string;
     description: string;
     image: string;
-    title: string;
     category: string;
     price: number | null;
   }
@@ -32,7 +26,15 @@ export type ApiListResponse<Type> = {
     email: string;
     phone: string;
   }
-  
+
+  // Интерфейс для работы с данными заказа
+  export interface IOrderData {
+    setOrderField(field: keyof TFullOrderData, value: string): void; // Установить значение поля
+    updatePaymentMethod(method: string): void; // Обновить способ оплаты
+    validateOrder(): boolean; // Валидировать 
+    clearOrder(): void; // Очистить данные 
+  }
+
   // Итоговые данные заказа, отправляемые на сервер
   export interface IOrderSummary extends IPaymentData, IContactData {
     id: string[];
@@ -49,36 +51,28 @@ export type ApiListResponse<Type> = {
   export type TFullOrderData = IPaymentData & IContactData;
   
   
-  // Интерфейс для отображения данных корзины
-  export interface IBasketDisplay {
-    items: HTMLElement[];
-    total: number;
-  }
-  
   // Интерфейс для работы с корзиной
   export interface IBasketData {
     items: IProductCard[];
+    total: number;
     addProduct(product: IProductCard): void;
     removeProduct(id: string): void;
     getItemCount(): number;
-    getTotal(): number;
     hasProduct(id: string): boolean;
     clearBasket(): void;
   }
+
+  // Интерфейс для отображения данных корзины
+export interface IBasketDisplay {
+  items: HTMLElement[];
+  total: number;
+}
   
-  // Описание товара, которое мы будем хранить в корзине
-  export type BasketProductCard = {
-    id: string;
-    title: string;
-    price: number;
-  };
-  
-  // Интерфейс состояния формы с валидностью и сообщениями об ошибках
-  export interface IFormValidationState {
-    isValid: boolean;
-    errorMessages: string[];
-  }
   
   // Тип для ошибок валидации отдельных полей формы
   export type TFormErrors = Partial<Record<keyof TFullOrderData, string>>;
   
+
+  export interface ICardActions {
+  onClick: (event: MouseEvent) => void;
+}

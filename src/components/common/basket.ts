@@ -1,53 +1,67 @@
-import {Component} from "../base/component";
-import {formatNumber, createElement, ensureElement} from "../../utils/utils";
-import {EventEmitter} from "../base/events";
+import { Component } from "../base/component";
+import { createElement, ensureElement } from "../../utils/utils";
+import { IEvents } from "../base/events";
+import { IBasketDisplay } from "../../types";
 
-interface IBasketView {
-    items: HTMLElement[];
-    total: number;
-    selected: string[];
-}
 
-export class Basket extends Component<IBasketView> {
-    protected _list: HTMLElement;
-    protected _total: HTMLElement;
-    protected _button: HTMLElement;
+// Класс для отображения корзины
+export class BasketView extends Component<IBasketDisplay> {
+    protected events: IEvents;
+    protected _basketButton: HTMLButtonElement; // Кнопка корзины
+    protected _totalPriceElement: HTMLElement; // общая стоимость
+    protected _productList: HTMLElement; // Список товаров в корзине
 
-    constructor(container: HTMLElement, protected events: EventEmitter) {
+    constructor(container: HTMLElement, events: IEvents) {
         super(container);
 
-        this._list = ensureElement<HTMLElement>('.basket__list', this.container);
-        this._total = this.container.querySelector('.basket__total');
-        this._button = this.container.querySelector('.basket__action');
+        // Находим элементы в дом
+        this._basketButton = ensureElement<HTMLButtonElement>(".basket__button", this.container);
+        this._totalPriceElement = ensureElement<HTMLElement>(".basket__price", this.container);
+        this._productList = ensureElement<HTMLElement>(".basket__list", this.container);
 
-        if (this._button) {
-            this._button.addEventListener('click', () => {
-                events.emit('order:open');
+        // обработчик клика на кнопку корзины
+        if (this._basketButton) {
+            this._basketButton.addEventListener('click', () => {
+              events.emit('order:open');
             });
-        }
+          }
 
         this.items = [];
     }
 
+    // Устанавливаем список товаров в корзине
     set items(items: HTMLElement[]) {
         if (items.length) {
-            this._list.replaceChildren(...items);
+            this._productList.replaceChildren(...items);
+            this._basketButton.removeAttribute("disabled");
         } else {
-            this._list.replaceChildren(createElement<HTMLParagraphElement>('p', {
-                textContent: 'Корзина пуста'
-            }));
+            this._basketButton.setAttribute("disabled", "disabled");
+            this._productList.replaceChildren(
+                createElement<HTMLParagraphElement>("p", {
+                    textContent: "В корзине нет товаров",
+                })
+            );
         }
     }
 
-    set selected(items: string[]) {
-        if (items.length) {
-            this.setDisabled(this._button, false);
-        } else {
-            this.setDisabled(this._button, true);
-        }
+    // Устанавливаем общую стоимость товаров в корзине
+    set totalPrice(total: number) {
+        this.setText(this._totalPriceElement, `${total} синапсов`);
     }
 
-    set total(total: number) {
-        this.setText(this._total, formatNumber(total));
+
+    render(data?: IBasketDisplay): HTMLElement {
+        if (data) {
+            // Очищаем и заполняем список товаров
+            this._productList.innerHTML = '';
+            data.items.forEach(item => this._productList.appendChild(item));
+
+            // Устанавливаем общую стоимость
+            this.totalPrice = data.total;
+
+            // Обновляем состояние кнопки корзины
+            this._basketButton.disabled = data.items.length === 0;
+        }
+        return this.container;
     }
 }

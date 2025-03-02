@@ -175,6 +175,32 @@ export interface IFullOrderData {
 
 # Базовый код
 
+## Класс EventEmitter 
+
+Класс EventEmitter предназначен для управления событиями и их обработчиками в приложении. 
+
+### Свойства
+- _events: Map<EventName, Set<Subscriber>> – хранит события и их подписчиков.
+
+EventName — тип, представляющий имя события.
+
+Subscriber — тип, представляющий функцию-обработчик события.
+
+### Конструктор
+- constructor()
+Создает новый экземпляр EventEmitter.
+
+### Методы
+
+- on<T extends object>(eventName: EventName, callback: (event: T) => void): void – pегистрирует обработчик для заданного события. 
+
+- off(eventName: EventName, callback: Subscriber): void – удаляет обработчик с указанного события.
+
+- emit<T extends object>(eventName: string, data?: T): void – генерирует событие и передаёт ему данные. 
+
+- trigger<T extends object>(eventName: string, context?: Partial<T>): (event?: object) => void – создает и возвращает функцию-триггер, которая при вызове генерирует указанное событие.
+
+---
 
 ## Абстрактный класс Component<T>
 
@@ -220,48 +246,6 @@ export interface IFullOrderData {
 - post(endpoint: string, data: any)  
   Отправляет POST-запрос на сервер с переданными данными.
 
----
-
-## Класс Modal
-
-Компонент для работы с модальными окнами.
-
-
-### Свойства
-- closeModalButton: HTMLButtonElement — кнопка закрытия модального окна.
-
-- content: HTMLElement — контейнер для содержимого модального окна.
-
-### Методы
-- open(): void
-Открывает модальное окно.
-
-- close(): void
-Закрывает модальное окно.
-
-- closeModalEscape(event: KeyboardEvent): void
-Закрывает модальное окно при нажатии клавиши Escape.
-
-- render(content: HTMLElement): void
-Отрисовывает содержимое модального окна.
-
----
-
-## Класс Form
-
-Базовый класс для работы с формами. Отвечает за валидацию и отображение ошибок.
-
-### Свойства
-- submit: HTMLButtonElement — кнопка отправки формы.
-
-- errors: HTMLElement — элемент для отображения сообщений об ошибках.
-
-### Конструктор
-- constructor(container: HTMLElement, events: EventEmitter)
-
-### Методы
-- set errors(value: string)
-Устанавливает текст ошибки и отображает его в интерфейсе.
 
 ---
 
@@ -361,6 +345,48 @@ export interface IFullOrderData {
 
 ---
 
+## Класс Modal
+
+Компонент для работы с модальными окнами.
+
+
+### Свойства
+- closeModalButton: HTMLButtonElement — кнопка закрытия модального окна.
+
+- content: HTMLElement — контейнер для содержимого модального окна.
+
+### Методы
+- open(): void
+Открывает модальное окно.
+
+- close(): void
+Закрывает модальное окно.
+
+- closeModalEscape(event: KeyboardEvent): void
+Закрывает модальное окно при нажатии клавиши Escape.
+
+- render(content: HTMLElement): void
+Отрисовывает содержимое модального окна.
+
+---
+
+## Класс Form
+
+Базовый класс для работы с формами. Отвечает за валидацию и отображение ошибок.
+
+### Свойства
+- submit: HTMLButtonElement — кнопка отправки формы.
+
+- errors: HTMLElement — элемент для отображения сообщений об ошибках.
+
+### Конструктор
+- constructor(container: HTMLElement, events: EventEmitter)
+
+### Методы
+- set errors(value: string)
+Устанавливает текст ошибки и отображает его в интерфейсе.
+
+---
 
 ## Класс ProductCard
 
