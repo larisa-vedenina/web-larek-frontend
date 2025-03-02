@@ -7,7 +7,6 @@ export interface IModalData {
 };
 
 
-
 export class Modal extends Component<IModalData> {
     protected _closeButton: HTMLButtonElement;
     protected _content: HTMLElement;
